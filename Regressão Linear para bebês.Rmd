@@ -1,0 +1,88 @@
+---
+title: "Regressão Linear"
+author: "João Victor Fernandes"
+date: "2024-04-03"
+output: pdf_document
+---
+
+```{r Limpando Environment}
+rm(list=ls(all=T))
+```
+
+# Regressão Linear
+
+## O que é regressão linear e para quê ela é usada?
+
+A regressão linear é uma técnica estatística que permite estimar a relação entre uma variável dependente (a variável que queremos entender/explicar/prever) e uma ou mais variáveis independentes (também chamadas de variáveis explicativas)
+
+Pode ser **simples** (apenas uma variável independente) ou **múltipla** (duas ou mais variáveis independentes)
+
+## O que é o coeficiente de determinação (R²) em uma regressão linear?
+
+O coeficiente de determinação, representado por **R²**, é uma medida que indica a proporção da variabilidade na variável dependente que é explicada pelas variáveis independentes no modelo de regressão. Ele varia de 0 a 1, sendo 1 indicativo de uma correspondência perfeita entre os dados e o modelo. Cuidado: um R² muito alto não é necessariamente um bom sinal. Mas um coeficiente de determinação perto de zero indca que o modelo teórico proposto não consegue explicar a variação observada na sua base de dados.
+
+## Principais pressupostos da regressão linear
+
+1.  **Linearidade**: a relação entre as variáveis deve ser linear
+2.  **Homoscedasticidade**: a variabilidade dos erros deve ser constante em todos os níveis das variáveis independentes
+3.  **Normalidade**: os erros devem seguir uma distribuição normal
+4.  **Independência dos erros**: os erros devem ser independentes uns dos outros
+
+```{r Exemplo, eval=FALSE, include=FALSE}
+modelo <- lm(vd ~ vi, data = base_de_dados)
+summary(modelo)
+
+# modelo representa o objeto que armazenará os resultados da função lm
+# lm é a função nativa do R que permite estimar a regressão linear
+# vd é a variável dependente
+# vi é a variável independente
+# data representa a base de dados
+```
+
+```{r}
+m1 <- lm(mpg ~ cyl, data = mtcars)
+summary(m1)
+
+```
+
+### Características do coeficiente de regressão:
+
+1.  **Magnitude**: indica a força da relação entre variável independente e variável dependente;
+2.  **Sinal**: indica a direção da relação (se positiva ou negativa)
+3.  **Significância estatística**: indica em que medida os resultados da amostra podem ser generalizados para a população
+
+No exemplo acima, estamos estimando a relação entre eficiência energética (mpg) e quantidade de cilindros (cyl).
+
+O valor -2,8758 no R² da variável cyl indica que quanto maior a quantidade de cilindros do carro, menor a eficiência energética. Isto é, ao adicionar um cilindro, há um redução média de 2,8758 na eficiência energética.
+
+O valor na coluna Pr(\>\| t \|) indica que o valor p, ou significância estatística do R². Usualmente, um valor p inferior a 0,05 é considerado estatísticamente significativo, isto é, significa que podemos generalizar os resultados da amostra para a população.
+
+O valor em Multiple R-squared representa a proporção da variável dependente que é explicada pela independente. Neste caso, cyl explica 72% de mpg.
+
+```{r}
+set.seed(666)
+ x<-rnorm(1000,0,1)
+ z<-rnorm(1000,0,1)
+ e<-rnorm(1000,0,1)
+ y<- 2+ .25 * x + 1.3 * z + e
+ df <- as.data.frame (cbind(y,x,z))
+ m2 <-lm(y ~ x+z, data = df)
+ 
+ summary(m2)
+```
+
+No exemplo simulado acima, em média, quando X aumenta uma unidade, Y aumenta 0,22, mantendo constante os valores de Z. Também podemos dizer que Z aumenta em média, 1,28 unidades, mantendo constantes os valores de X. Por fim, 65% da variação de Y pode ser explicada pela variação conjunta de X e Z.
+
+Valores de R² muito altos, principalmente nas ciências humanas, são indicativos de alerta de que há algo errado no modelo.
+
+```{r}
+set.seed(123)
+ efetivo_policial <-rnorm(1000,15,3)
+ desemprego <-rnorm(1000,12,2)
+ e<-rnorm(1000,0,1)
+ taxa_homi <- 5+ 3 * desemprego - 6 * efetivo_policial + e
+ df <- as.data.frame (cbind(taxa_homi, efetivo_policial, desemprego))
+ m3 <-lm(taxa_homi ~ efetivo_policial+desemprego, data = df)
+ 
+ summary(m3)
+```
